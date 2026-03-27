@@ -81,6 +81,8 @@ function Bullet({ children }) {
 
 export default function LandingPage() {
   const [modal, setModal] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [calculator, setCalculator] = useState({
     students: 24,
     minutesPerStudent: 6,
@@ -108,12 +110,53 @@ export default function LandingPage() {
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
+    if (submitError) {
+      setSubmitError("");
+    }
     setForm((current) => ({ ...current, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    openModal("demo-request");
+
+    setIsSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const response = await fetch("/api/request-demo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (!response.ok) {
+        let message = "Could not send your request. Please try again.";
+        try {
+          const errorBody = await response.json();
+          if (errorBody?.error) {
+            message = errorBody.error;
+          }
+        } catch {
+          // Keep fallback message if JSON parsing fails.
+        }
+        throw new Error(message);
+      }
+
+      openModal("demo-request");
+      setForm({
+        name: "",
+        email: "",
+        role: "Teacher",
+        students: "",
+        useCase: "",
+      });
+    } catch (error) {
+      setSubmitError(error.message || "Could not send your request. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -682,10 +725,12 @@ export default function LandingPage() {
             </label>
             <button
               type="submit"
+              disabled={isSubmitting}
               className="mt-6 w-full rounded-full bg-slate-950 px-6 py-4 text-base font-semibold text-white transition hover:bg-slate-800"
             >
-              Request Demo
+              {isSubmitting ? "Submitting..." : "Request Demo"}
             </button>
+            {submitError ? <p className="mt-4 text-sm text-rose-600">{submitError}</p> : null}
             <p className="mt-4 text-sm text-slate-500">
               This can connect to a CRM or email tool later. For now, the action validates purchase
               intent and interest by role.
