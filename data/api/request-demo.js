@@ -42,9 +42,7 @@ export async function handler(event) {
 
   const name = String(payload.name || "").trim();
   const email = String(payload.email || "").trim().toLowerCase();
-  const role = String(payload.role || "Teacher").trim();
-  const useCase = String(payload.useCase || "").trim();
-  const rawStudents = payload.students;
+  const school = String(payload.school || "").trim();
 
   if (!name) {
     return jsonResponse(400, { error: "Name is required." });
@@ -54,33 +52,19 @@ export async function handler(event) {
     return jsonResponse(400, { error: "A valid email is required." });
   }
 
-  let students = null;
-  if (rawStudents !== undefined && rawStudents !== null && String(rawStudents).trim() !== "") {
-    const parsed = Number(rawStudents);
-    if (!Number.isFinite(parsed) || parsed < 0) {
-      return jsonResponse(400, { error: "Students must be a valid non-negative number." });
-    }
-    students = Math.floor(parsed);
-  }
-
   try {
     const sql = neon(databaseUrl);
 
+    // Add the school column if the table pre-dates this change.
+    // All other columns (role, students, use_case) already exist and keep their schema.
     await sql`
-      CREATE TABLE IF NOT EXISTS DEMO_REQUESTS_GFR (
-        id BIGSERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        email TEXT NOT NULL,
-        role TEXT NOT NULL,
-        students INTEGER,
-        use_case TEXT,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      );
+      ALTER TABLE demo_requests ADD COLUMN IF NOT EXISTS school TEXT;
     `;
 
+    // role is NOT NULL in the existing schema — supply a default so the constraint is satisfied.
     await sql`
-      INSERT INTO demo_requests (name, email, role, students, use_case)
-      VALUES (${name}, ${email}, ${role}, ${students}, ${useCase || null});
+      INSERT INTO demo_requests (name, email, role, school)
+      VALUES (${name}, ${email}, 'Teacher', ${school || null});
     `;
 
     return jsonResponse(201, { success: true });
