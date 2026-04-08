@@ -1,8 +1,9 @@
-import React, { useRef } from "react";
+'use client';
+
+import React from "react";
 import { HeroSection } from "./src/components/HeroSection";
 import { ProblemSection } from "./src/components/ProblemSection";
 import { SolutionSection } from "./src/components/SolutionSection";
-import { DemoForm } from "./src/components/DemoForm";
 
 // ─── Small reusable primitives ───────────────────────────────────────────────
 
@@ -85,18 +86,11 @@ function Bullet({ children }) {
   );
 }
 
+function goToApp() {
+  window.location.href = '/results';
+}
+
 export default function LandingPage() {
-  const demoFormRef = useRef(null);
-
-  function scrollToDemo() {
-    demoFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  function scrollToSampleReport() {
-    // Placeholder: link out or open a modal when ready.
-    scrollToDemo();
-  }
-
   return (
     <div className="min-h-screen bg-white text-slate-900 [font-family:ui-rounded,system-ui,-apple-system,BlinkMacSystemFont,'Segoe_UI',sans-serif]">
 
@@ -106,18 +100,17 @@ export default function LandingPage() {
           <span className="text-lg font-bold tracking-tight text-slate-900">
             GradeFlow<span className="text-emerald-600">Reports</span>
           </span>
-          <button
-            type="button"
-            onClick={scrollToDemo}
+          <a
+            href="/results"
             className="rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-500"
           >
-            Request Demo
-          </button>
+            Try Now →
+          </a>
         </div>
       </header>
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <HeroSection onRequestDemo={scrollToDemo} onSampleReport={scrollToSampleReport} />
+      <HeroSection onRequestDemo={goToApp} onSampleReport={goToApp} />
 
       {/* ── Problem ──────────────────────────────────────────────────────── */}
       <ProblemSection />
@@ -181,8 +174,28 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Demo CTA Form ─────────────────────────────────────────────────── */}
-      <DemoForm formRef={demoFormRef} />
+      {/* ── Try Now CTA ───────────────────────────────────────────────────── */}
+      <section id="try-now" className="border-y border-slate-200 bg-slate-950 py-20 sm:py-24">
+        <div className="mx-auto max-w-4xl px-6 text-center sm:px-8">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-emerald-400">
+            No sign-up required
+          </p>
+          <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            Upload your Excel. Get report cards instantly.
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-slate-400 sm:text-lg">
+            Use the DepEd-ready template, fill in your class data, and generate print-ready
+            report cards in seconds — completely free to try.
+          </p>
+          <a
+            href="/results"
+            className="mt-10 inline-block rounded-full bg-emerald-500 px-10 py-4 text-base font-semibold text-white shadow-xl shadow-emerald-900/40 transition hover:bg-emerald-400"
+          >
+            Try Now — it's free →
+          </a>
+          <p className="mt-4 text-xs text-slate-500">No account. No credit card. Just upload and go.</p>
+        </div>
+      </section>
 
       {/* ── Trust Section ─────────────────────────────────────────────────── */}
       <section className="bg-white py-20 sm:py-24">
@@ -278,13 +291,12 @@ export default function LandingPage() {
             See how GradeFlow Reports works with your class size and workflow. Takes 10 minutes,
             no commitment required.
           </p>
-          <button
-            type="button"
-            onClick={scrollToDemo}
-            className="mt-10 rounded-full bg-white px-9 py-4 text-base font-semibold text-emerald-700 shadow-xl shadow-emerald-800/20 transition hover:bg-emerald-50"
+          <a
+            href="/results"
+            className="mt-10 inline-block rounded-full bg-white px-9 py-4 text-base font-semibold text-emerald-700 shadow-xl shadow-emerald-800/20 transition hover:bg-emerald-50"
           >
-            Request a Demo
-          </button>
+            Try Now — Upload Your Excel →
+          </a>
         </div>
       </section>
 

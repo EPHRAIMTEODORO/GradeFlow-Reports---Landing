@@ -2,20 +2,31 @@
   "name": "gradeflow-reports-landing",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "dev:landing": "vite",
+    "build:landing": "vite build",
+    "preview:landing": "vite preview"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
+    "next": "^15.3.0",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.11",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "autoprefixer": "^10.4.27",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.7.0",
     "vite": "^7.1.0"
   }
 }

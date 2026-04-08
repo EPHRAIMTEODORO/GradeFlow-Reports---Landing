@@ -27,13 +27,12 @@ export function HeroSection({ onRequestDemo, onSampleReport }) {
 
         {/* CTAs */}
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <button
-            type="button"
-            onClick={onRequestDemo}
-            className="w-full rounded-full bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-500 sm:w-auto"
+          <a
+            href="/results"
+            className="w-full rounded-full bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-500 sm:w-auto text-center"
           >
-            Request a Demo
-          </button>
+            Try Now — Upload Excel →
+          </a>
           <button
             type="button"
             onClick={onSampleReport}
